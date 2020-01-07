@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 import IngredientForm from "./IngredientForm";
 import IngredientList from "./IngredientList";
@@ -9,32 +9,33 @@ const Ingredients = () => {
 
   // we can manage side effects(typical HTTP Request)
   // this function runs when this component renders and for every render cycle.
-  useEffect(() => {
-    fetch("https://react-my-burger-f01f7.firebaseio.com/hookssss.json")
-      .then(response => response.json())
-      .then(responseBodyData => {
-        const loadedIngredients = [];
-        for (const key in responseBodyData) {
-          loadedIngredients.push({
-            id: key,
-            title: responseBodyData[key].title,
-            amount: responseBodyData[key].amount
-          });
-        }
-        setIngredients(loadedIngredients); // this line make infinitive loops. because it updates like componentDidUpdate without []
-        // thats why useEffect takes second argument(array). only changes dependencies.
-        // default is for every render cycle
-        // [] acts like componentDidMount:it runs only once(after the first render)
-      });
-  }, []);
+  // useEffect(() => {
+  //   fetch("https://react-my-burger-f01f7.firebaseio.com/hookssss.json")
+  //     .then(response => response.json())
+  //     .then(responseBodyData => {
+  //       const loadedIngredients = [];
+  //       for (const key in responseBodyData) {
+  //         loadedIngredients.push({
+  //           id: key,
+  //           title: responseBodyData[key].title,
+  //           amount: responseBodyData[key].amount
+  //         });
+  //       }
+  //       setIngredients(loadedIngredients); // this line make infinitive loops. because it updates like componentDidUpdate without []
+  //       // thats why useEffect takes second argument(array). only changes dependencies.
+  //       // default is for every render cycle
+  //       // [] acts like componentDidMount:it runs only once(after the first render)
+  //     });
+  // }, []);
 
   useEffect(() => {
     console.log("rendering ingredients", ingredients);
   }, [ingredients]);
 
-  const filterIngredientsHandler=filteredIngredients=>{
+  // useCallback will never rerun. It keeps in cache
+  const filterIngredientsHandler = useCallback(filteredIngredients => {
     setIngredients(filteredIngredients);
-  }
+  }, []);
 
   // we have to keep previous ingredients for using in the future.
   // we add new one to existing ingredients list.
