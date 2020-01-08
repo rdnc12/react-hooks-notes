@@ -58,9 +58,17 @@ const Ingredients = () => {
   };
 
   const removeIngredientHandler = ingId => {
-    const ingredientAll = [...ingredients];
-    ingredientAll.splice(ingId, 1);
-    setIngredients(ingredientAll);
+    // we knows the id of our ingredients and uses it in the url.
+    fetch(
+      `https://react-my-burger-f01f7.firebaseio.com/hookssss/${ingId}.json`,
+      {
+        method: "DELETE"
+      }
+    ).then(response => {
+      const ingredientAll = [...ingredients];
+      ingredientAll.splice(ingId, 1);
+      setIngredients(ingredientAll);
+    });
 
     // this is another way to delete it
     // setIngredients(prevIngredients =>
